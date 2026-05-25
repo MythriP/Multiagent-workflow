@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Content Dashboard{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              50:  '#FDFBF7',
+              100: '#FAF8F4',
+              200: '#F5F1EA',
+              300: '#EDE7DD',
+              400: '#D7CDBE',
+              500: '#A89F90',
+            },
+            ink: {
+              900: '#0A0A0A',
+              800: '#1A1A1A',
+              700: '#2A2A2A',
+              600: '#525252',
+              500: '#6B6258',
+              400: '#9A9388',
+            },
+            violet: {
+              soft: '#8B5CF6',
+              mute: '#C4B5FD',
+            },
+            peach: { soft: '#FFD9C9' },
+            sage:  { soft: '#D5E5D2' },
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Instrument Serif"', 'Georgia', 'serif'],
+          },
+          boxShadow: {
+            'soft': '0 1px 2px rgba(10, 10, 10, 0.04), 0 2px 8px rgba(10, 10, 10, 0.04)',
+            'card': '0 1px 3px rgba(10, 10, 10, 0.05), 0 4px 16px rgba(10, 10, 10, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body class="bg-cream-100 text-ink-900 min-h-screen antialiased font-sans selection:bg-ink-900 selection:text-cream-50">
+
+  <!-- Top nav -->
+  <header class="border-b border-cream-300 bg-cream-100/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-xl font-display italic tracking-tight text-ink-900">content<span class="not-italic font-sans font-bold">.</span></span>
+      </div>
+      <nav class="flex gap-6 items-center">
+        <a href="/"
+           class="text-sm transition-colors relative
+                  {% if active_tab == 'queue' %}text-ink-900 font-semibold{% else %}text-ink-500 hover:text-ink-900 font-medium{% endif %}">
+          Queue
+          {% if active_tab == 'queue' and topics is defined %}
+            <span class="ml-1 text-ink-500 font-normal">({{ topics|length }})</span>
+          {% endif %}
+          {% if active_tab == 'queue' %}
+            <span class="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-ink-900"></span>
+          {% endif %}
+        </a>
+        <a href="/inventory"
+           class="text-sm transition-colors relative
+                  {% if active_tab == 'inventory' %}text-ink-900 font-semibold{% else %}text-ink-500 hover:text-ink-900 font-medium{% endif %}">
+          Inventory
+          {% if active_tab == 'inventory' %}
+            <span class="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-ink-900"></span>
+          {% endif %}
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    document.body.addEventListener('htmx:beforeRequest', function(evt) {
+      evt.detail.elt.classList.add('opacity-50', 'pointer-events-none');
+    });
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+      evt.detail.elt.classList.remove('opacity-50', 'pointer-events-none');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{
+  "topic": "Anthropic Mythos AI Model Leak",
+  "slug": "anthropic-mythos",
+  "slides": [
+    {
+      "type": "cover",
+      "props": {
+        "headline": "HACKERS HAVE BREACHED ANTHROPIC'S \"TOO DANGEROUS TO RELEASE\" MYTHOS AI MODEL",
+        "accentWords": ["ANTHROPIC'S", "\"TOO DANGEROUS TO RELEASE\"", "MYTHOS AI MODEL"],
+        "tagline": "THE LINE BETWEEN SAFETY AND VULNERABILITY JUST GOT THINNER",
+        "heroImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg",
+        "ctaLabel": "SWIPE",
+        "accentColor": "#8B7FFF"
+      }
+    },
+    {
+      "type": "embed",
+      "props": {
+        "contextText": "Here's the report that broke the story:",
+        "embedImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg",
+        "captionText": "",
+        "accentColor": "#8B7FFF"
+      }
+    },
+    {
+      "type": "body",
+      "props": {
+        "lines": [
+          "> anthropic builds a cyberweapon",
+          "> calls it mythos",
+          "> \"can hack every major OS and browser\"",
+          "> dario: \"we're the safe & responsible ai lab\"",
+          "> \"can't release it to the public\"",
+          "> Mercor (their training contractor) gets breached"
+        ],
+        "accentColor": "#8B7FFF"
+      }
+    },
+    {
+      "type": "body",
+      "props": {
+        "lines": [
+          "> leaks anthropic's model naming conventions",
+          "> hackers guess the URL pattern",
+          "> contractor credentials still work",
+          "> they're inside",
+          "",
+          "The group also has access to other unreleased Anthropic models.",
+          "",
+          "Not just Mythos. The whole pipeline."
+        ],
+        "accentColor": "#8B7FFF"
+      }
+    },
+    {
+      "type": "body",
+      "props": {
+        "lines": [
+          "Anthropic's statement: \"investigating a report of access through one of our third-party vendor environments.\"",
+          "",
+          "Mythos got breached on day one."
+        ],
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg",
+        "accentColor": "#8B7FFF"
+      }
+    },
+    {
+      "type": "closer",
+      "props": {
+        "lines": [
+          "Follow for more."
+        ],
+        "accentWords": [],
+        "accentColor": "#8B7FFF"
+      }
+    }
+  ],
+  "caption": "Anthropic is investigating a case where its restricted \"Mythos\" model was accessed by a small group of unauthorized users shortly after it was announced.\n\nMythos is not a public model — it is part of a controlled program used for advanced cybersecurity testing, with capabilities focused on finding software vulnerabilities and generating exploit strategies.\n\nReports suggest the access did not come from breaking Anthropic's core systems, but through a third-party pathway, likely involving leftover contractor credentials and predictable internal URL structures linked to a vendor environment.\n\nThe model was originally limited to select partners under a program called Project Glasswing, meaning exposure came from the surrounding ecosystem rather than the model itself.\n\nAnthropic says it is reviewing the incident and there is no confirmed evidence of malicious use so far, but it highlights how supply chain access points can become weak links when deploying high capability AI systems.",
+  "hashtags": [
+    "AI",
+    "Anthropic",
+    "Cybersecurity",
+    "MachineLearning",
+    "AINews"
+  ]
+}

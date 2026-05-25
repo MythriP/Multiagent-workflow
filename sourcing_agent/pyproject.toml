@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sourcing-agent"
+version = "0.1.0"
+description = "Discovers, deduplicates, scores, and enriches AI/ML topics from RSS, HackerNews, Reddit, arXiv, HF Papers, GitHub Trending, NewsAPI, and Google News."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Pinch" }]
+dependencies = [
+    "httpx>=0.27.0",
+    "pyyaml>=6.0.1",
+    "feedparser>=6.0.11",
+    "beautifulsoup4>=4.12.3",
+    "lxml>=5.2.2",
+    "python-dotenv>=1.0.1",
+    "rapidfuzz>=3.9.3",
+    "rich>=13.7.1",
+    "slack-sdk>=3.27.2",
+    "flask>=3.0.3",
+    "apscheduler>=3.10.4",
+    "python-dateutil>=2.9.0",
+]
+
+[project.scripts]
+sourcing-agent = "sourcing_agent.run:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sourcing_agent*"]
+exclude = ["outputs*"]

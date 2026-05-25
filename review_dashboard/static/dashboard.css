@@ -1,0 +1,39 @@
+/* Social preview frame sizing — Tailwind CDN doesn't support custom aspect ratios easily */
+
+.twitter-card { font-family: 'Inter', system-ui, sans-serif; }
+.instagram-card { font-family: 'Inter', system-ui, sans-serif; }
+.tiktok-card { font-family: 'Inter', system-ui, sans-serif; }
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Line clamp utility (single-line truncation) */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth HTMX swap */
+[hx-post] { cursor: pointer; }
+
+/* Scrollbar styling – cream theme */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #FAF8F4; }
+::-webkit-scrollbar-thumb { background: #D7CDBE; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #A89F90; }
+
+/* HTMX in-flight loading indicator */
+.htmx-request { opacity: 0.6; transition: opacity 0.15s ease; }

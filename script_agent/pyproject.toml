@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "script-agent"
+version = "0.1.0"
+description = "Topic → narrative → voiceover → scene plan → rendered MP4 pipeline for Pinch AI/ML content."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Pinch" }]
+dependencies = [
+    "anthropic>=0.40.0",
+    "elevenlabs>=1.9.0",
+    "openai>=1.50.0",
+    "httpx>=0.27.0",
+    "Pillow>=10.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "yt-dlp>=2024.0.0",
+    "fal-client>=0.4.0",
+]
+
+[project.scripts]
+script-agent = "script_agent.run:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["script_agent*"]
+exclude = ["outputs*", "cache*", "logs*"]

@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+{% block title %}Inventory — Content Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="flex items-end justify-between mb-10">
+  <div>
+    <h1 class="text-4xl font-display italic text-ink-900 tracking-tight leading-none">Inventory</h1>
+    <p class="text-sm text-ink-500 mt-3">10-day rolling window · approved videos · latest first</p>
+  </div>
+  <a href="/inventory"
+     class="text-sm text-ink-600 hover:text-ink-900 transition-colors flex items-center gap-1.5">
+    <span class="text-base leading-none">↻</span> Refresh
+  </a>
+</div>
+
+{% if not grouped %}
+<div class="text-center py-32">
+  <p class="text-6xl mb-6 opacity-40">·</p>
+  <p class="text-xl font-display italic text-ink-700">Inventory is empty</p>
+  <p class="text-sm mt-3 text-ink-500">Approve topics in the <a href="/" class="text-ink-900 underline underline-offset-4">Queue</a> and run the pipeline to populate the inventory.</p>
+</div>
+{% endif %}
+
+{% for date_label, items in grouped.items() %}
+
+{% set ready_items = items | selectattr("_video_ready") | list %}
+
+{% if ready_items %}
+
+<!-- ── Date bar ──────────────────────────────────────────────────────────── -->
+<div class="relative flex items-center gap-5 my-8">
+  <div class="flex-1 h-px bg-cream-300"></div>
+  <span class="shrink-0 text-xs font-semibold uppercase tracking-[0.15em] text-ink-500 bg-cream-100 px-4 py-1.5 rounded-full border border-cream-300">
+    {{ date_label }}
+    <span class="ml-1.5 text-ink-400 font-normal normal-case tracking-normal">· {{ ready_items|length }}</span>
+  </span>
+  <div class="flex-1 h-px bg-cream-300"></div>
+</div>
+
+<!-- ── Ready videos grid ─────────────────────────────────────────────────── -->
+{% if ready_items %}
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+{% for t in ready_items %}
+{% set slug = t._slug %}
+{% set title = t.topic | clean_title %}
+{% set video_url = t._video_url %}
+{% set is_approved = t.video_approved is defined and t.video_approved %}
+{% set is_rejected = t.video_rejected is defined and t.video_rejected %}
+{% set is_regen    = t.video_status == "regenerating" %}
+
+<div id="video-card-{{ slug }}"
+     class="flex flex-col rounded-2xl overflow-hidden shadow-card bg-ink-900 group
+            {% if is_approved %}ring-2 ring-emerald-400{% elif is_rejected %}ring-2 ring-red-400 opacity-50{% elif is_regen %}ring-2 ring-amber-300{% endif %}">
+
+  <!-- 9:16 video viewport -->
+  <div class="relative overflow-hidden" style="aspect-ratio: 9 / 16; background: #0a0a0a;">
+
+    {% if is_regen %}
+    <!-- Regenerating state -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-amber-950/80">
+      <span class="text-amber-400 text-3xl animate-spin">⟳</span>
+      <p class="text-amber-200 text-xs font-medium">Regenerating…</p>
+      {% if t.redo_stage %}
+      <p class="text-amber-400 text-[10px] text-center px-3">{{ {"full":"narration + scenes","scenes":"scenes only","render":"render only"}.get(t.redo_stage, t.redo_stage) }}</p>
+      {% endif %}
+    </div>
+    {% elif video_url %}
+    <!-- Video element -->
+    <video
+      id="vid-{{ slug }}"
+      src="{{ video_url }}"
+      class="absolute inset-0 w-full h-full object-contain bg-ink-900"
+      loop
+      playsinline
+      preload="metadata"
+    ></video>
+
+    <!-- Click overlay — always present, toggles play/pause -->
+    <div id="video-overlay-{{ slug }}"
+         class="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/25 transition-opacity duration-150"
+         onclick="togglePlay('{{ slug }}')">
+      <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 hover:bg-white/30 transition-colors">
+        <!-- Icon path toggled by JS: play ▶ / pause ⏸ -->
+        <svg id="video-icon-{{ slug }}" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path id="video-icon-path-{{ slug }}" d="M8 5v14l11-7z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Mute button — Google Meet style: circular, bottom-center, hidden until playing -->
+    <button id="mute-btn-{{ slug }}"
+            onclick="event.stopPropagation(); toggleMute('{{ slug }}')"
+            class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md items-center justify-center hover:bg-black/85 transition-colors border border-white/10"
+            style="display:none"
+            title="Toggle mute">
+      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <path id="mute-icon-{{ slug }}" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+      </svg>
+    </button>
+    {% else %}
+    <div class="absolute inset-0 flex items-center justify-center">
+      <span class="text-ink-500 text-xs">No video</span>
+    </div>
+    {% endif %}
+
+    <!-- Status pill (top-left) -->
+    <span class="absolute top-2 left-2 text-[10px] rounded-full px-2 py-0.5 font-semibold uppercase tracking-wide
+      {% if is_approved %}bg-emerald-500 text-white
+      {% elif is_rejected %}bg-red-500 text-white
+      {% elif is_regen %}bg-amber-500 text-white
+      {% else %}bg-ink-800/80 text-cream-200 backdrop-blur-md{% endif %}">
+      {% if is_approved %}✓ Approved
+      {% elif is_rejected %}✕ Rejected
+      {% elif is_regen %}↻ Redo
+      {% else %}Ready{% endif %}
+    </span>
+
+    <!-- Score chip (top-right) -->
+    <span class="absolute top-2 right-2 text-[11px] rounded-full px-2 py-0.5 font-semibold bg-black/60 text-cream-200 backdrop-blur-md tabular-nums">
+      {{ t.score or "—" }}
+    </span>
+
+    <!-- Time chip (bottom-left) -->
+    <span class="absolute bottom-2 left-2 text-[10px] rounded-full px-2 py-0.5 bg-black/60 text-cream-300 backdrop-blur-md">
+      {{ t.published_at | time_ago }}
+    </span>
+  </div>
+
+  <!-- Card body -->
+  <div class="flex flex-col gap-2 p-3 bg-ink-900 border-t border-ink-800">
+    <p class="text-[12px] font-medium text-cream-200 leading-snug line-clamp-2">{{ title }}</p>
+
+    {% if not is_approved and not is_rejected and not is_regen %}
+    <!-- Action buttons — full-width rectangular pills, text only -->
+    <div class="flex gap-1.5 mt-0.5">
+      <button
+        hx-post="/video-approve/{{ slug }}"
+        hx-target="#video-card-{{ slug }}"
+        hx-swap="outerHTML"
+        class="flex-1 rounded-lg bg-emerald-900/50 hover:bg-emerald-600 border border-emerald-700/60 hover:border-emerald-500 py-2 text-[11px] font-semibold text-emerald-300 hover:text-white transition-colors">
+        Approve
+      </button>
+      <button
+        hx-post="/video-reject/{{ slug }}"
+        hx-target="#video-card-{{ slug }}"
+        hx-swap="outerHTML"
+        hx-confirm="Reject this video?"
+        class="flex-1 rounded-lg bg-red-900/40 hover:bg-red-700 border border-red-900/60 hover:border-red-600 py-2 text-[11px] font-semibold text-red-400 hover:text-white transition-colors">
+        Reject
+      </button>
+      <button
+        onclick="openRedoDialog('{{ slug }}', {{ title | tojson }})"
+        class="flex-1 rounded-lg bg-amber-900/40 hover:bg-amber-600 border border-amber-800/60 hover:border-amber-500 py-2 text-[11px] font-semibold text-amber-400 hover:text-white transition-colors">
+        Redo
+      </button>
+    </div>
+    {% elif is_approved %}
+    <div class="flex items-center gap-1.5">
+      <span class="text-[11px] text-emerald-400 font-medium">✓ Queued for posting</span>
+    </div>
+    {% elif is_rejected %}
+    <div class="flex items-center gap-1.5">
+      <span class="text-[11px] text-red-400 font-medium">✕ Rejected</span>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+{% endif %}{# ready_items #}
+{% endfor %}
+
+<!-- ────────────────────────────────────────────────────────────────────────── -->
+<!-- Redo dialog (shared, one instance) -->
+<!-- ────────────────────────────────────────────────────────────────────────── -->
+<dialog id="redo-dialog"
+  class="rounded-3xl shadow-card bg-cream-100 border border-cream-300 w-full max-w-md p-0 backdrop:bg-ink-900/50 backdrop:backdrop-blur-sm">
+
+  <div class="px-6 pt-6 pb-2">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <p class="text-xs text-ink-500 uppercase tracking-wider mb-1">Redo video</p>
+        <h3 id="redo-dialog-title" class="text-lg font-display italic text-ink-900 leading-snug"></h3>
+      </div>
+      <button onclick="document.getElementById('redo-dialog').close()"
+              class="text-ink-400 hover:text-ink-900 text-2xl leading-none mt-0.5 shrink-0">×</button>
+    </div>
+
+    <!-- Feedback textarea -->
+    <label class="block text-xs font-medium text-ink-700 mb-1.5">What should change?</label>
+    <textarea
+      id="redo-feedback-input"
+      rows="4"
+      placeholder="e.g. 'Make the narration shorter and less hype-y' or 'The third scene has the wrong image — use a diagram instead'"
+      class="w-full rounded-xl border border-cream-400 bg-white px-4 py-3 text-sm text-ink-900 placeholder-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-900 resize-none leading-relaxed"
+    ></textarea>
+
+    <!-- Stage hint -->
+    <div id="redo-stage-hint" class="mt-2 text-[11px] text-ink-500 leading-snug hidden">
+      <span class="font-medium text-ink-700">Detected stage:</span>
+      <span id="redo-stage-label"></span>
+    </div>
+  </div>
+
+  <div class="px-6 pb-6 pt-4 flex items-center justify-between gap-3">
+    <button onclick="document.getElementById('redo-dialog').close()"
+            class="rounded-full border border-cream-400 bg-cream-200 hover:bg-cream-300 px-5 py-2.5 text-sm font-medium text-ink-700 transition-colors">
+      Cancel
+    </button>
+    <button id="redo-send-btn"
+            onclick="submitRedo()"
+            class="rounded-full bg-ink-900 hover:bg-ink-800 text-cream-50 px-6 py-2.5 text-sm font-semibold transition-colors flex items-center gap-2">
+      <span>Send</span>
+      <span class="text-base leading-none">→</span>
+    </button>
+  </div>
+</dialog>
+
+<script>
+// ── Video player helpers ──────────────────────────────────────────────────────
+
+const PLAY_PATH  = "M8 5v14l11-7z";
+const PAUSE_PATH = "M6 19h4V5H6v14zm8-14v14h4V5h-4z";
+const MUTED_PATH = "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z";
+const UNMUTED_PATH = "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z";
+
+function _setPlayState(slug, playing) {
+  const iconPath = document.getElementById("video-icon-path-" + slug);
+  const overlay  = document.getElementById("video-overlay-"   + slug);
+  const muteBtn  = document.getElementById("mute-btn-"        + slug);
+
+  if (playing) {
+    if (iconPath) iconPath.setAttribute("d", PAUSE_PATH);
+    // Fade overlay out while playing; reappear on hover
+    if (overlay) overlay.style.opacity = "0";
+    if (muteBtn) { muteBtn.style.display = "flex"; }
+  } else {
+    if (iconPath) iconPath.setAttribute("d", PLAY_PATH);
+    if (overlay) overlay.style.opacity = "1";
+    if (muteBtn) { muteBtn.style.display = "none"; }
+  }
+}
+
+// Show pause icon on overlay hover while playing
+document.addEventListener("mouseover", e => {
+  const overlay = e.target.closest("[id^='video-overlay-']");
+  if (!overlay) return;
+  const slug = overlay.id.replace("video-overlay-", "");
+  const vid  = document.getElementById("vid-" + slug);
+  if (vid && !vid.paused) overlay.style.opacity = "1";
+});
+document.addEventListener("mouseout", e => {
+  const overlay = e.target.closest("[id^='video-overlay-']");
+  if (!overlay) return;
+  const slug = overlay.id.replace("video-overlay-", "");
+  const vid  = document.getElementById("vid-" + slug);
+  if (vid && !vid.paused) overlay.style.opacity = "0";
+});
+
+function togglePlay(slug) {
+  const vid = document.getElementById("vid-" + slug);
+  if (!vid) return;
+
+  if (vid.paused) {
+    // Pause all other videos first
+    document.querySelectorAll("video[id^='vid-']").forEach(v => {
+      if (v !== vid && !v.paused) {
+        v.pause();
+        // pause event fires → _setPlayState(false) via listener
+      }
+    });
+    vid.play();
+    _setPlayState(slug, true);
+  } else {
+    vid.pause();
+    _setPlayState(slug, false);
+  }
+}
+
+function toggleMute(slug) {
+  const vid      = document.getElementById("vid-"       + slug);
+  const iconPath = document.getElementById("mute-icon-" + slug);
+  if (!vid || !iconPath) return;
+  vid.muted = !vid.muted;
+  iconPath.setAttribute("d", vid.muted ? MUTED_PATH : UNMUTED_PATH);
+}
+
+// Sync UI when browser pauses a video externally (e.g. tab loses focus)
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("video[id^='vid-']").forEach(vid => {
+    const slug = vid.id.replace("vid-", "");
+    vid.addEventListener("pause", () => _setPlayState(slug, false));
+    vid.addEventListener("play",  () => _setPlayState(slug, true));
+  });
+});
+
+// ── Redo dialog ───────────────────────────────────────────────────────────────
+let _redoSlug = "";
+
+function openRedoDialog(slug, title) {
+  _redoSlug = slug;
+  document.getElementById("redo-dialog-title").textContent = title;
+  document.getElementById("redo-feedback-input").value = "";
+  document.getElementById("redo-stage-hint").classList.add("hidden");
+  document.getElementById("redo-dialog").showModal();
+  setTimeout(() => document.getElementById("redo-feedback-input").focus(), 50);
+}
+
+// Live stage hint as the user types
+const _FULL_KW  = new Set(["narration","voiceover","story","tone","long","short","boring","pacing","script","rewrite","redo","energy","voice","words"]);
+const _SCENE_KW = new Set(["image","scene","picture","photo","layout","visual","screenshot","replace","wrong","graphic","background","clip"]);
+const _RENDER_KW = new Set(["font","color","colour","caption","subtitle","timing","render","size","cut","transition"]);
+
+function detectStage(text) {
+  const words = text.toLowerCase().match(/\w+/g) || [];
+  let f = 0, s = 0, r = 0;
+  words.forEach(w => {
+    if (_FULL_KW.has(w))   f++;
+    if (_SCENE_KW.has(w))  s++;
+    if (_RENDER_KW.has(w)) r++;
+  });
+  const best = Math.max(f, s, r);
+  if (best === 0) return null;
+  if (f === best) return { key: "full",   label: "full pipeline (narration + scenes + render)" };
+  if (s === best) return { key: "scenes", label: "scenes + render only" };
+  return { key: "render", label: "render only" };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const ta = document.getElementById("redo-feedback-input");
+  const hint = document.getElementById("redo-stage-hint");
+  const label = document.getElementById("redo-stage-label");
+  ta.addEventListener("input", () => {
+    const stage = detectStage(ta.value);
+    if (stage && ta.value.trim().length > 5) {
+      label.textContent = " " + stage.label;
+      hint.classList.remove("hidden");
+    } else {
+      hint.classList.add("hidden");
+    }
+  });
+});
+
+async function submitRedo() {
+  const feedback = document.getElementById("redo-feedback-input").value.trim();
+  const btn = document.getElementById("redo-send-btn");
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="animate-spin inline-block">⟳</span><span>Sending…</span>';
+
+  const formData = new FormData();
+  formData.append("feedback", feedback);
+
+  try {
+    const resp = await fetch(`/video-redo/${_redoSlug}`, {
+      method: "POST",
+      body: formData,
+    });
+    const html = await resp.text();
+
+    const card = document.getElementById(`video-card-${_redoSlug}`);
+    if (card) card.outerHTML = html;
+
+    document.getElementById("redo-dialog").close();
+  } catch (err) {
+    alert("Failed to submit: " + err);
+    btn.disabled = false;
+    btn.innerHTML = '<span>Send</span><span class="text-base leading-none">→</span>';
+  }
+}
+
+// Close dialog on backdrop click
+document.addEventListener("DOMContentLoaded", () => {
+  const dlg = document.getElementById("redo-dialog");
+  dlg.addEventListener("click", e => {
+    if (e.target === dlg) dlg.close();
+  });
+});
+</script>
+
+{% endblock %}

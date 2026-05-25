@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Queue — Content Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Header row -->
+<div class="flex items-end justify-between mb-10">
+  <div>
+    <h1 class="text-4xl font-display italic text-ink-900 tracking-tight leading-none">Review Queue</h1>
+    <p class="text-sm text-ink-500 mt-3">
+      {% if topics %}
+        {{ topics|length }} topic{% if topics|length != 1 %}s{% endif %} pending — approve to trigger Phase 4, reject to archive
+      {% else %}
+        No topics pending review
+      {% endif %}
+    </p>
+  </div>
+  <a href="/"
+     class="text-sm text-ink-600 hover:text-ink-900 transition-colors flex items-center gap-1.5">
+    <span class="text-base leading-none">↻</span> Refresh
+  </a>
+</div>
+
+{% if not topics %}
+<div class="text-center py-32">
+  <p class="text-6xl mb-6 opacity-40">·</p>
+  <p class="text-xl font-display italic text-ink-700">Queue is empty</p>
+  <p class="text-sm mt-3 text-ink-500">Run <code class="bg-cream-200 px-2 py-1 rounded-md text-ink-800 font-mono text-xs">python run.py --n 10</code> to source new topics</p>
+</div>
+{% endif %}
+
+<!-- Date-grouped wide cards -->
+{% for date_key, items in grouped.items() %}
+
+<!-- Date bar -->
+<div class="relative flex items-center gap-5 my-8">
+  <div class="flex-1 h-px bg-cream-300"></div>
+  <span class="shrink-0 text-xs font-semibold uppercase tracking-[0.15em] text-ink-500 bg-cream-100 px-4 py-1.5 rounded-full border border-cream-300">
+    {{ date_key | date_label }}
+    <span class="ml-1.5 text-ink-400 font-normal normal-case tracking-normal">· {{ items|length }}</span>
+  </span>
+  <div class="flex-1 h-px bg-cream-300"></div>
+</div>
+
+<div class="space-y-5">
+{% for t in items %}
+{% set slug = t._slug %}
+{% set title = t.topic | clean_title %}
+{% set score = t.score %}
+{% set color = score | score_color %}
+{% set detail = t._scoring_detail or {} %}
+{% set sources = t.sources or [] %}
+{% set source_names = [] %}
+{% for s in sources %}{% if s.name not in source_names %}{% if source_names.append(s.name) %}{% endif %}{% endif %}{% endfor %}
+{% set first_image = t.media.images[0] if t.media and t.media.images else None %}
+{% set key_facts = t.key_facts[:2] if t.key_facts else [] %}
+{% set pub = t.published_at[:10] if t.published_at else "—" %}
+
+<article id="card-{{ slug }}" class="bg-white rounded-2xl shadow-soft hover:shadow-card transition-shadow overflow-hidden">
+  <div class="p-7">
+
+    <!-- Top row: image + title + meta -->
+    <div class="flex items-start gap-5 mb-6">
+      {% if first_image %}
+      <img src="{{ first_image }}" alt=""
+           class="w-20 h-20 rounded-xl object-cover shrink-0 bg-cream-200"
+           onerror="this.style.display='none'" />
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap mb-2">
+          <!-- Score badge -->
+          <span class="inline-flex items-center font-semibold text-xs rounded-full px-2.5 py-1
+            {% if color == 'emerald' %}bg-sage-soft text-emerald-900
+            {% elif color == 'yellow' %}bg-cream-300 text-ink-800
+            {% else %}bg-peach-soft text-orange-900{% endif %}">
+            {{ score }}
+          </span>
+          <!-- Content type pill -->
+          <span class="text-xs rounded-full px-2.5 py-1 font-medium
+            {% if t.content_type == 'reactive' %}bg-cream-200 text-ink-700
+            {% else %}bg-violet-soft/15 text-violet-soft{% endif %}">
+            {{ t.content_type }}
+          </span>
+          <!-- Time-ago chip -->
+          <span class="text-xs rounded-full px-2.5 py-1 font-medium bg-ink-900 text-cream-50">
+            {{ t.published_at | time_ago }}
+          </span>
+          <span class="text-xs text-ink-500">{{ pub }}</span>
+        </div>
+        <h2 class="text-lg font-semibold text-ink-900 leading-snug line-clamp-2 tracking-tight">{{ title }}</h2>
+      </div>
+    </div>
+
+    <!-- Signals -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      {% set signals = [
+        ('Recency',      detail.recency or 0),
+        ('Virality',     detail.virality or 0),
+        ('Source',       detail.source_weight or 0),
+        ('Amplification',detail.amplification or 0),
+      ] %}
+      {% for label, val in signals %}
+      <div class="bg-cream-100 rounded-xl px-3.5 py-3">
+        <p class="text-[10px] text-ink-500 uppercase tracking-wider font-medium mb-1.5">{{ label }}</p>
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-base font-semibold text-ink-900 tabular-nums">{{ val }}</span>
+          <span class="text-[10px] text-ink-400">/100</span>
+        </div>
+        <div class="mt-1.5 h-1 rounded-full bg-cream-300 overflow-hidden">
+          <div class="h-1 rounded-full bg-ink-900" style="width: {{ val | score_bar_width }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Counts row -->
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-500 mb-4">
+      <span><span class="text-ink-900 font-semibold">{{ detail.distinct_sources or sources|length }}</span> sources</span>
+      <span><span class="text-ink-900 font-semibold">{{ (t.media.images or [])|length }}</span> images</span>
+      <span><span class="text-ink-900 font-semibold">{{ (t.media.videos or [])|length }}</span> videos</span>
+    </div>
+
+    <!-- Source chips -->
+    {% if source_names %}
+    <div class="flex flex-wrap gap-1.5 mb-5">
+      {% for name in source_names[:6] %}
+      <span class="text-[11px] text-ink-700 bg-cream-200 rounded-full px-2.5 py-1">{{ name }}</span>
+      {% endfor %}
+      {% if source_names|length > 6 %}
+      <span class="text-[11px] text-ink-500 px-1 self-center">+{{ source_names|length - 6 }} more</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Key facts -->
+    {% if key_facts %}
+    <ul class="space-y-2 mb-6">
+      {% for fact in key_facts %}
+      <li class="text-[13px] text-ink-600 leading-relaxed flex gap-2.5">
+        <span class="text-ink-400 shrink-0 mt-0.5">›</span>
+        <span class="line-clamp-2">{{ fact[:200] }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Source link -->
+    {% if sources and sources[0].url %}
+    <a href="{{ sources[0].url }}" target="_blank" rel="noopener"
+       class="text-xs text-ink-500 hover:text-ink-900 underline underline-offset-4 decoration-ink-400 transition-colors mb-6 inline-block">
+      {{ sources[0].url[:80] }}{% if sources[0].url|length > 80 %}…{% endif %} ↗
+    </a>
+    {% endif %}
+
+    <!-- Action buttons -->
+    <div class="flex gap-3 pt-5 border-t border-cream-300">
+      <button
+        hx-post="/approve/{{ slug }}"
+        hx-target="#card-{{ slug }}"
+        hx-swap="outerHTML"
+        class="flex-1 bg-ink-900 hover:bg-ink-800 text-white text-sm font-medium rounded-full px-6 py-3 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]">
+        Approve
+      </button>
+      <button
+        hx-post="/reject/{{ slug }}"
+        hx-target="#card-{{ slug }}"
+        hx-swap="outerHTML"
+        class="flex-1 bg-cream-100 hover:bg-cream-200 border border-cream-400 text-ink-700 text-sm font-medium rounded-full px-6 py-3 transition-all">
+        Reject
+      </button>
+    </div>
+
+  </div>
+</article>
+{% endfor %}
+</div>
+
+{% endfor %}
+
+{% endblock %}

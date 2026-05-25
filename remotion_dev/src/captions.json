@@ -1,0 +1,341 @@
+{
+  "totalDuration": 25.423673,
+  "words": [
+    {
+      "text": "Wait.",
+      "start": 0,
+      "end": 0.337,
+      "line": 1
+    },
+    {
+      "text": "Gemini",
+      "start": 0.43,
+      "end": 0.836,
+      "line": 1
+    },
+    {
+      "text": "got",
+      "start": 0.906,
+      "end": 1.08,
+      "line": 1
+    },
+    {
+      "text": "MORE",
+      "start": 1.173,
+      "end": 1.428,
+      "line": 1
+    },
+    {
+      "text": "downloads",
+      "start": 1.463,
+      "end": 1.904,
+      "line": 1
+    },
+    {
+      "text": "than",
+      "start": 1.939,
+      "end": 2.067,
+      "line": 1
+    },
+    {
+      "text": "ChatGPT",
+      "start": 2.136,
+      "end": 2.752,
+      "line": 1
+    },
+    {
+      "text": "after",
+      "start": 2.961,
+      "end": 3.251,
+      "line": 1
+    },
+    {
+      "text": "their",
+      "start": 3.297,
+      "end": 3.46,
+      "line": 1
+    },
+    {
+      "text": "image",
+      "start": 3.518,
+      "end": 3.773,
+      "line": 1
+    },
+    {
+      "text": "launches.",
+      "start": 3.82,
+      "end": 4.505,
+      "line": 1
+    },
+    {
+      "text": "22",
+      "start": 4.804671,
+      "end": 5.326671,
+      "line": 2
+    },
+    {
+      "text": "million",
+      "start": 5.443671,
+      "end": 5.791671,
+      "line": 2
+    },
+    {
+      "text": "new",
+      "start": 5.849671,
+      "end": 5.965671,
+      "line": 2
+    },
+    {
+      "text": "users.",
+      "start": 6.046671,
+      "end": 6.592671,
+      "line": 2
+    },
+    {
+      "text": "In",
+      "start": 6.638671,
+      "end": 6.766671,
+      "line": 2
+    },
+    {
+      "text": "just",
+      "start": 6.836671,
+      "end": 7.056671,
+      "line": 2
+    },
+    {
+      "text": "28",
+      "start": 7.103671,
+      "end": 7.486670999999999,
+      "line": 2
+    },
+    {
+      "text": "days.",
+      "start": 7.532671000000001,
+      "end": 7.915671,
+      "line": 2
+    },
+    {
+      "text": "So",
+      "start": 8.016145,
+      "end": 8.190145,
+      "line": 3
+    },
+    {
+      "text": "Gemini",
+      "start": 8.248145,
+      "end": 8.608145,
+      "line": 3
+    },
+    {
+      "text": "is",
+      "start": 8.643145,
+      "end": 8.701145,
+      "line": 3
+    },
+    {
+      "text": "winning,",
+      "start": 8.771145,
+      "end": 9.073145,
+      "line": 3
+    },
+    {
+      "text": "right?",
+      "start": 9.096145,
+      "end": 9.456145,
+      "line": 3
+    },
+    {
+      "text": "ChatGPT",
+      "start": 10.055782,
+      "end": 10.775782000000001,
+      "line": 4
+    },
+    {
+      "text": "made",
+      "start": 10.926782000000001,
+      "end": 11.123782,
+      "line": 4
+    },
+    {
+      "text": "70",
+      "start": 11.181782,
+      "end": 11.471782000000001,
+      "line": 4
+    },
+    {
+      "text": "million",
+      "start": 11.529782,
+      "end": 11.808782,
+      "line": 4
+    },
+    {
+      "text": "dollars.",
+      "start": 11.855782000000001,
+      "end": 12.400782000000001,
+      "line": 4
+    },
+    {
+      "text": "Gemini",
+      "start": 12.609782000000001,
+      "end": 12.969782,
+      "line": 4
+    },
+    {
+      "text": "made",
+      "start": 13.039782,
+      "end": 13.306782,
+      "line": 4
+    },
+    {
+      "text": "181",
+      "start": 13.480782000000001,
+      "end": 14.525782,
+      "line": 4
+    },
+    {
+      "text": "thousand.",
+      "start": 14.653782,
+      "end": 15.303782000000002,
+      "line": 4
+    },
+    {
+      "text": "Same",
+      "start": 15.547782000000002,
+      "end": 15.860782,
+      "line": 4
+    },
+    {
+      "text": "28",
+      "start": 15.918782,
+      "end": 16.301782000000003,
+      "line": 4
+    },
+    {
+      "text": "days.",
+      "start": 16.348782,
+      "end": 16.789782000000002,
+      "line": 4
+    },
+    {
+      "text": "That's",
+      "start": 17.089569,
+      "end": 17.449569,
+      "line": 5
+    },
+    {
+      "text": "386",
+      "start": 17.600569,
+      "end": 18.807569,
+      "line": 5
+    },
+    {
+      "text": "times",
+      "start": 18.877569,
+      "end": 19.132569,
+      "line": 5
+    },
+    {
+      "text": "more",
+      "start": 19.202569,
+      "end": 19.376569,
+      "line": 5
+    },
+    {
+      "text": "revenue.",
+      "start": 19.423569,
+      "end": 19.875569000000002,
+      "line": 5
+    },
+    {
+      "text": "From",
+      "start": 19.933569000000002,
+      "end": 20.119569000000002,
+      "line": 5
+    },
+    {
+      "text": "fewer",
+      "start": 20.235569,
+      "end": 20.514569,
+      "line": 5
+    },
+    {
+      "text": "downloads.",
+      "start": 20.560569,
+      "end": 21.222569,
+      "line": 5
+    },
+    {
+      "text": "The",
+      "start": 21.522721,
+      "end": 21.673721,
+      "line": 6
+    },
+    {
+      "text": "real",
+      "start": 21.754721,
+      "end": 21.963721,
+      "line": 6
+    },
+    {
+      "text": "AI",
+      "start": 22.033721,
+      "end": 22.300721,
+      "line": 6
+    },
+    {
+      "text": "race",
+      "start": 22.381721,
+      "end": 22.683721000000002,
+      "line": 6
+    },
+    {
+      "text": "isn't",
+      "start": 22.741721000000002,
+      "end": 22.996721,
+      "line": 6
+    },
+    {
+      "text": "about",
+      "start": 23.020721,
+      "end": 23.229721,
+      "line": 6
+    },
+    {
+      "text": "downloads.",
+      "start": 23.275721,
+      "end": 23.890721,
+      "line": 6
+    },
+    {
+      "text": "It's",
+      "start": 23.925721,
+      "end": 24.099721000000002,
+      "line": 6
+    },
+    {
+      "text": "about",
+      "start": 24.134721,
+      "end": 24.343721000000002,
+      "line": 6
+    },
+    {
+      "text": "who",
+      "start": 24.401721000000002,
+      "end": 24.587721000000002,
+      "line": 6
+    },
+    {
+      "text": "gets",
+      "start": 24.645721,
+      "end": 24.842721,
+      "line": 6
+    },
+    {
+      "text": "paid.",
+      "start": 24.889721,
+      "end": 25.423721,
+      "line": 6
+    }
+  ]
+}

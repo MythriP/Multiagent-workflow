@@ -1,0 +1,74 @@
+# ── Python ─────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── Virtualenvs ────────────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.python-version
+
+# ── Node ───────────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── OS / editor ────────────────────────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── Secrets ────────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Claude Code local settings (per-user tool allowlist) ──────────────────────
+.claude/settings.local.json
+**/settings.local.json
+
+# ── Pipeline runtime artifacts (regenerated every run) ────────────────────────
+**/outputs/
+**/cache/
+**/logs/
+*.log
+
+# ── Sourcing agent state ───────────────────────────────────────────────────────
+sourcing_agent/seen.json
+sourcing_agent/feedback.json
+
+# ── Remotion runtime assets (large, regenerated) ──────────────────────────────
+remotion_dev/public/voiceovers/
+remotion_dev/public/clips/
+remotion_dev/public/audio/
+remotion_dev/example-reel.mp4
+
+# ── Orphan / unused large image assets (not referenced in code) ───────────────
+remotion_dev/public/images/article/
+remotion_dev/public/images/scene-*.jpg
+
+# ── PDF / paper / lipsync caches (auto-downloaded or regenerated) ────────────
+**/.pdf_cache/
+**/.*_cache/
+**/.cache/
+
+# ── Training data (already used to train; do not push) ────────────────────────
+training_data/
+trainingdata_slides/

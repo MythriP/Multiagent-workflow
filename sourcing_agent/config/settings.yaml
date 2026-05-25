@@ -1,0 +1,146 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Sourcing Agent Settings
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Scoring weights (must sum to 1.0) ────────────────────────────────────────
+scoring:
+  recency_weight: 0.30       # How fresh the story is (0h = 100, 48h+ = 0)
+  virality_weight: 0.30      # HN score + Reddit upvotes, normalized
+  source_weight: 0.20        # Official blog vs third-party (from feeds.yaml)
+  amplification_weight: 0.20 # How many distinct sources covered the same story
+
+  recency_max_hours: 48      # Stories older than this score 0 on recency
+
+# ── Watch mode ────────────────────────────────────────────────────────────────
+watch:
+  interval_minutes: 30       # Poll interval (default)
+  score_threshold: 75        # Only alert if score > this
+  max_alerts_per_cycle: 7    # Cap alerts per poll cycle (top N by score)
+
+# ── Batch / default mode ──────────────────────────────────────────────────────
+batch:
+  default_n: 10              # Default number of topics to output
+
+# ── Daily buffer ──────────────────────────────────────────────────────────────
+daily_buffer:
+  default_n: 10              # Topics to ensure are queued each day
+  run_at_hour: 8             # Hour (24h) to run daily buffer (local time)
+
+# ── Content type balance (when no --type flag) ────────────────────────────────
+# Shifted toward ML/research depth — most posts should be educational/technical,
+# with reactive AI news as the occasional flavour.
+content_mix:
+  reactive_pct: 40
+  educational_pct: 60
+
+# ── Type-specific source boosts ───────────────────────────────────────────────
+type_boosts:
+  reactive:
+    sources: ["Hacker News", "Reddit", "NewsAPI", "TechCrunch AI", "The Verge AI", "Google News"]
+    boost_multiplier: 1.4    # Boost score for stories from these sources
+  educational:
+    sources:
+      - "arXiv"
+      - "HuggingFace Daily Papers"
+      - "HuggingFace Blog"
+      - "Papers With Code"
+      - "Google Research Blog"
+      - "Google DeepMind Blog"
+      - "Microsoft Research"
+      - "Meta Research"
+      - "Anthropic Research"
+      - "Apple ML Research"
+      - "Lil'Log (Lilian Weng)"
+      - "Eugene Yan (Applied ML)"
+      - "Sebastian Raschka Magazine"
+      - "Jay Alammar"
+      - "LMSYS Org"
+      - "Together AI Blog"
+      - "Databricks Blog"
+      - "WandB Blog"
+      - "Uber Engineering"
+      - "Netflix Tech Blog"
+      - "Airbnb Engineering"
+      - "Import AI"
+      - "The Gradient"
+      - "The Sequence"
+      - "MIRI"
+    boost_multiplier: 1.45
+
+# ── Clustering ────────────────────────────────────────────────────────────────
+clustering:
+  title_similarity_threshold: 65  # rapidfuzz ratio threshold (0-100)
+
+# ── Enrichment ────────────────────────────────────────────────────────────────
+enrichment:
+  max_images: 12             # Max images to collect per story (post-validation)
+  max_videos: 4              # Max videos to collect per story
+  max_documents: 3           # Max PDFs / non-HTML docs to collect per story
+  request_timeout: 10        # HTTP timeout in seconds
+
+  # ── Image quality gate ──────────────────────────────────────────────────────
+  # Before any image lands in topic.json, we fetch it (with a small read budget)
+  # and check the actual decoded dimensions. Anything smaller than these limits
+  # is treated as a logo/icon/avatar/badge and dropped — even if it claimed to
+  # be larger in the HTML.
+  image_min_width: 200       # Minimum decoded width in pixels
+  image_min_height: 200      # Minimum decoded height in pixels
+  image_max_aspect_ratio: 6.0  # Reject extreme banners (e.g. site logos)
+
+  # ── PDF figures (research papers) ───────────────────────────────────────────
+  pdf_max_figures: 5         # Cap for figures lifted from a paper PDF
+
+  # ── Outbound link following (NON-paper sources only) ────────────────────────
+  follow_links:
+    enabled: true
+    max_per_source: 3        # Cap follow-ups per origin article
+    timeout: 10              # HTTP timeout for link probes
+    relevance_min_score: 2   # Minimum relevance score (anchor + URL signals)
+
+  # ── Video duration handling ─────────────────────────────────────────────────
+  # Short videos / GIFs are downloaded inline. Longer videos are still kept,
+  # but stored with one or more recommended start/end windows and labels so
+  # the script agent can play just the useful segments.
+  video:
+    short_max_sec: 600       # ≤ 10 min → treat as a short clip
+    long_max_sec: 1800       # > 10 min, ≤ 30 min → window + thumbnail only
+    max_windows_per_long: 3  # Up to N highlight windows per long video
+    window_default_sec: 30   # Length of each highlight window when not specified
+
+# ── NewsAPI polling ───────────────────────────────────────────────────────────
+newsapi:
+  poll_interval_minutes: 120  # Poll every 2h to stay under 100 req/day limit
+  queries:
+    - "machine learning research"
+    - "large language model"
+    - "transformer architecture"
+    - "fine-tuning LLM"
+    - "model training"
+    - "RLHF reinforcement learning"
+    - "diffusion model"
+    - "open weights model"
+    - "OpenAI"
+    - "Anthropic"
+    - "Google DeepMind"
+    - "Mistral AI"
+
+# ── Google News RSS queries ───────────────────────────────────────────────────
+google_news:
+  queries:
+    - "machine learning research paper"
+    - "transformer LLM architecture"
+    - "fine-tuning language model"
+    - "RLHF reinforcement learning"
+    - "model distillation quantization"
+    - "mixture of experts MoE"
+    - "diffusion model research"
+    - "open weights LLM"
+    - "retrieval augmented generation"
+    - "LLM benchmark evaluation"
+    - "Anthropic research"
+    - "Anthropic Claude"
+    - "DeepMind paper"
+    - "Mistral AI"
+    - "LMSYS Chatbot Arena"
+    - "LinkedIn engineering machine learning"
+    - "scaling laws training"

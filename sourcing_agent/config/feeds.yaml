@@ -1,0 +1,332 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# RSS / Atom feeds for the sourcing agent
+# Each entry: name, url, tier (1|2), content_bias (reactive|educational|both),
+#             source_weight (0.0-1.0), official (true if company's own blog)
+# ─────────────────────────────────────────────────────────────────────────────
+
+feeds:
+
+  # ── Foundation Model Labs ──────────────────────────────────────────────────
+  - name: "OpenAI Blog"
+    url: "https://openai.com/blog/rss.xml"
+    tier: 1
+    content_bias: both
+    source_weight: 1.0
+    official: true
+
+  - name: "HuggingFace Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    tier: 1
+    content_bias: educational
+    source_weight: 1.0
+    official: true
+
+  - name: "Google DeepMind Blog"
+    url: "https://deepmind.google/blog/rss.xml"
+    tier: 1
+    content_bias: educational
+    source_weight: 1.0
+    official: true
+
+  - name: "Together AI Blog"
+    url: "https://www.together.ai/blog/rss.xml"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  - name: "Cohere Blog"
+    url: "https://cohere.com/blog/rss"
+    tier: 2
+    content_bias: both
+    source_weight: 0.85
+    official: true
+
+  # Mistral / Anthropic / LMSYS don't expose proper RSS feeds — these come in
+  # through the Google News query queue in settings.yaml.
+
+  # ── Big Tech AI ────────────────────────────────────────────────────────────
+  - name: "Microsoft AI Blog"
+    url: "https://blogs.microsoft.com/ai/feed/"
+    tier: 1
+    content_bias: both
+    source_weight: 0.9
+    official: true
+
+  - name: "Microsoft Research"
+    url: "https://www.microsoft.com/en-us/research/feed/"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: true
+
+  - name: "Google Research Blog"
+    url: "https://research.google/blog/rss/"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: true
+
+  - name: "NVIDIA Blog"
+    url: "https://blogs.nvidia.com/feed/"
+    tier: 1
+    content_bias: both
+    source_weight: 0.85
+    official: true
+
+  - name: "NVIDIA Developer Blog"
+    url: "https://developer.nvidia.com/blog/feed/"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  - name: "AWS Machine Learning Blog"
+    url: "https://aws.amazon.com/blogs/machine-learning/feed/"
+    tier: 1
+    content_bias: both
+    source_weight: 0.85
+    official: true
+
+  - name: "Meta AI Engineering"
+    url: "https://engineering.fb.com/category/ml-applications/feed/"
+    tier: 1
+    content_bias: both
+    source_weight: 0.9
+    official: true
+
+  - name: "Meta Research"
+    url: "https://research.facebook.com/feed/"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: true
+
+  - name: "Apple ML Research"
+    url: "https://machinelearning.apple.com/rss.xml"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.9
+    official: true
+
+  - name: "Apple Developer News"
+    url: "https://developer.apple.com/news/rss/news.rss"
+    tier: 2
+    content_bias: both
+    source_weight: 0.8
+    official: true
+
+  - name: "Databricks Blog"
+    url: "https://www.databricks.com/feed"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  # ── ML Researchers & Educators (Tier 1 Educational) ───────────────────────
+  - name: "Lil'Log (Lilian Weng)"
+    url: "https://lilianweng.github.io/index.xml"
+    tier: 1
+    content_bias: educational
+    source_weight: 1.0
+    official: false
+
+  - name: "Eugene Yan (Applied ML)"
+    url: "https://eugeneyan.com/rss/"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: false
+
+  - name: "Sebastian Raschka Magazine"
+    url: "https://magazine.sebastianraschka.com/feed"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: false
+
+  - name: "Jay Alammar"
+    url: "https://jalammar.github.io/feed.xml"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: false
+
+  # ── AI Infrastructure & Cloud ──────────────────────────────────────────────
+  - name: "Papers With Code"
+    url: "https://paperswithcode.com/rss.xml"
+    tier: 1
+    content_bias: educational
+    source_weight: 0.95
+    official: false
+
+  - name: "WandB Blog"
+    url: "https://wandb.ai/fully-connected/feed"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  # ── ML at Production Scale (Engineering Blogs) ─────────────────────────────
+  # LinkedIn Engineering blog blocks scrapers — sourced via Google News queries.
+
+  - name: "Uber Engineering"
+    url: "https://medium.com/feed/@uber"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  - name: "Netflix Tech Blog"
+    url: "https://medium.com/feed/netflix-techblog"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.85
+    official: true
+
+  - name: "Airbnb Engineering"
+    url: "https://medium.com/feed/airbnb-engineering"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.8
+    official: true
+
+  - name: "Weaviate Blog"
+    url: "https://weaviate.io/blog/rss.xml"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.65
+    official: true
+
+  - name: "Roboflow Blog"
+    url: "https://blog.roboflow.com/rss/"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.65
+    official: true
+
+  # ── AI Dev Tools & MLOps ───────────────────────────────────────────────────
+  - name: "LangChain Blog"
+    url: "https://blog.langchain.dev/rss/"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.75
+    official: true
+
+  - name: "Sourcegraph Blog"
+    url: "https://about.sourcegraph.com/blog/rss.xml"
+    tier: 2
+    content_bias: both
+    source_weight: 0.65
+    official: true
+
+  - name: "GitHub AI/ML Blog"
+    url: "https://github.blog/ai-and-ml/feed/"
+    tier: 1
+    content_bias: both
+    source_weight: 0.85
+    official: true
+
+  - name: "GitHub Blog"
+    url: "https://github.blog/feed/"
+    tier: 2
+    content_bias: both
+    source_weight: 0.8
+    official: true
+
+  - name: "Replit Blog"
+    url: "https://blog.replit.com/feed.xml"
+    tier: 2
+    content_bias: both
+    source_weight: 0.7
+    official: true
+
+  # ── Enterprise AI ──────────────────────────────────────────────────────────
+  - name: "Scale AI Blog"
+    url: "https://scale.com/blog/rss"
+    tier: 2
+    content_bias: both
+    source_weight: 0.7
+    official: true
+
+  - name: "Snowflake Blog"
+    url: "https://blog.snowflake.com/feed/"
+    tier: 2
+    content_bias: both
+    source_weight: 0.65
+    official: true
+
+  - name: "Palantir Blog"
+    url: "https://blog.palantir.com/feed"
+    tier: 2
+    content_bias: both
+    source_weight: 0.65
+    official: true
+
+  - name: "Salesforce AI"
+    url: "https://engineering.salesforce.com/feed"
+    tier: 2
+    content_bias: both
+    source_weight: 0.65
+    official: true
+
+  # ── Research Labs ──────────────────────────────────────────────────────────
+  - name: "MIRI"
+    url: "https://intelligence.org/feed/"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.7
+    official: true
+
+  # ── Autonomous Vehicles ────────────────────────────────────────────────────
+  - name: "Comma.ai Blog"
+    url: "https://blog.comma.ai/feed"
+    tier: 2
+    content_bias: both
+    source_weight: 0.65
+    official: true
+
+  # ── Tech News Media ────────────────────────────────────────────────────────
+  - name: "TechCrunch AI"
+    url: "https://techcrunch.com/tag/artificial-intelligence/feed/"
+    tier: 1
+    content_bias: reactive
+    source_weight: 0.75
+    official: false
+
+  - name: "The Verge AI"
+    url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+    tier: 1
+    content_bias: reactive
+    source_weight: 0.7
+    official: false
+
+  # ── Newsletters ────────────────────────────────────────────────────────────
+  - name: "Import AI"
+    url: "https://importai.substack.com/feed"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.8
+    official: false
+
+  - name: "The Sequence"
+    url: "https://thesequence.substack.com/feed"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.75
+    official: false
+
+  - name: "The Gradient"
+    url: "https://thegradient.pub/rss/"
+    tier: 2
+    content_bias: educational
+    source_weight: 0.75
+    official: false
+
+  # ── Product Launches ───────────────────────────────────────────────────────
+  - name: "Product Hunt"
+    url: "https://www.producthunt.com/feed"
+    tier: 2
+    content_bias: reactive
+    source_weight: 0.6
+    official: false
