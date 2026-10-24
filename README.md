@@ -1,4 +1,4 @@
-# Pinch — Content Generation Pipeline
+# Source-to-Screen Multi-Agent Workflow
 
 A four-stage multi-agent system that turns AI/ML news + research papers into finished 9:16 vertical videos for Reels, TikTok, and YouTube Shorts.
 
@@ -262,4 +262,4 @@ Each component has its own README with deeper details:
 
 ## License
 
-Proprietary — © Pinch.
+Proprietary — All rights reserved.
